@@ -8,6 +8,7 @@
 
 int main() {
 
+	std::cout << std::endl;
 
 	StopWatch stopwatch("stopwatch1");
 

@@ -1,18 +1,20 @@
 #include <iostream>
-#include <thread>
-#include <Windows.h>
-#include <conio.h>
 #include "StopWatch.h"
+#include "CountDown.h"
 
 
 
 int main() {
 
-	std::cout << std::endl;
+	/*std::cout << std::endl;
 
 	StopWatch stopwatch("stopwatch1");
 
-	stopwatch.Start();
+	stopwatch.Start();*/
+
+	CountDown countdown("myCountDown", 0, 0, 10);
+
+	countdown.Start();
 
 	return 0;
 }

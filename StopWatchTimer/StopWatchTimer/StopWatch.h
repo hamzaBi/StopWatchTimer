@@ -5,18 +5,11 @@
 #include <list>
 #include <iostream>
 #include <stdlib.h>
+#include "Flag.h"
+
+
+
 using  uint = unsigned int;
-
-
-struct Flag {
-	uint hours;
-	uint minutes;
-	uint seconds;
-
-	struct Flag operator-(const Flag& other) const {
-
-	}
-};
 
 
 class StopWatch : public Clock {
@@ -35,8 +28,8 @@ public:
 	}
 
 
-	Flag* getFlag() const {
-		return new Flag{ m_Hours, m_Minutes, m_Seconds };
+	Flag getFlag() const {
+		return Flag{ m_Hours, m_Minutes, m_Seconds };
 	}
 
 	friend void __ClockLoop(StopWatch&);
@@ -57,10 +50,11 @@ private:
 	 static bool m_Pause;
 	 static bool m_Stop;
 
-	 std::list<int> m_flags;
+	 std::list<std::pair<Flag, Flag>> m_Flags;
 	
 };
 
 
 void __ClockLoop(StopWatch&);
 std::ostream& operator<<(std::ostream& out, const StopWatch& watch);
+std::ostream& operator<<(std::ostream& out, const std::pair<Flag, Flag>& flag);

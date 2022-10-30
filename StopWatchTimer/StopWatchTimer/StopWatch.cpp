@@ -2,15 +2,44 @@
 #include <thread>
 #include <Windows.h>
 #include <conio.h>
+#include <iomanip>
 #include <stdlib.h>
+
 
 
 bool StopWatch::m_Stop;
 bool StopWatch::m_Pause;
 
+std::ostream& operator<<(std::ostream& out, const std::pair<Flag, Flag>& flag) {
+	auto f = flag.first;
+	auto s = flag.second;
+	out <<"\n|" << std::setw(11) << std::setfill(' ') <<"+" << f.hours << ":"
+		<< std::setw(2) << std::setfill('0') << f.minutes << ":" 
+		<< std::setw(2) << std::setfill('0') << f.seconds 
+		<< std::setw(10) << std::setfill(' ') << std::setw(8) 
+		<< s.hours << ":" << std::setw(2) 
+		<< std::setfill('0') << s.minutes 
+		<< ":" << std::setfill('0') 
+		<< std::setw(2) << s.seconds << std::setw(4)<<std::setfill(' ') << "|"
+		<< std::setw(38) << std::setfill('-');
+		return out;
+}
 
 std::ostream& operator<<(std::ostream& out, const StopWatch& watch) {
-	out << watch.m_Hours << ":" << watch.m_Minutes << ":" << watch.m_Seconds << ":" << watch.m_Millis << std::endl;
+	
+	out << std::setw(38) << std::setfill('-') << "\n"
+		<< "|" << std::setw(16) << std::setfill(' ')
+		<< watch.m_Hours << ":"
+		<< std::setw(2) << std::setfill('0') << watch.m_Minutes << ":"
+		<< std::setw(2) << std::setfill('0') << watch.m_Seconds
+		<< std::setw(15) << std::setfill(' ') << "|\n"
+		<< std::setw(38) << std::setfill('-');
+		
+	out.flush();
+
+	for (const std::pair<Flag, Flag>& flag : watch.m_Flags) {
+		out << flag << std::endl;
+	}
 	return out;
 }
 
@@ -24,10 +53,12 @@ std::ostream& operator<<(std::ostream& out, const StopWatch& watch) {
 void __ClockLoop(StopWatch & watch) {
 	
 	while (true) {
+	
 		if (StopWatch::m_Pause) {
+			
 			continue;
 		}
-
+		
 		Sleep(1000);
 		
 
@@ -99,7 +130,17 @@ void StopWatch::MainLoop() {
 
 
 void StopWatch::__AddFlag() {
-
+	auto flag = this->getFlag();
+	if (m_Flags.empty()) {
+		std::pair<Flag, Flag> f( Flag(), flag);
+		m_Flags.push_front(f);
+	}
+	else {
+		auto previous_flag = m_Flags.front().second;
+		auto difference = flag - previous_flag;
+		std::pair<Flag, Flag> f(difference, flag);
+		m_Flags.push_front(f);
+	}
 }
 
 void StopWatch::Start()   {

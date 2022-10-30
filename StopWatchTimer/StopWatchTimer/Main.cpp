@@ -12,7 +12,7 @@ int main() {
 
 	stopwatch.Start();*/
 
-	CountDown countdown("myCountDown", 0, 0, 10);
+	CountDown countdown("myCountDown", 0, 1, 10);
 
 	countdown.Start();
 
